@@ -3,6 +3,7 @@ import swaggerUi from 'swagger-ui-express';
 import apiSpec from '../openapi.json';
 
 import * as BookController from './controllers/book';
+import MockDataController from './controllers/mock-data/index';
 
 const swaggerUiOptions = {
   customCss: '.swagger-ui .topbar { display: none }'
@@ -10,10 +11,9 @@ const swaggerUiOptions = {
 
 const router = Router();
 
-// Book routes
-router.post('/book/add', BookController.add);
-router.get('/book/all', BookController.all);
-router.get('/book/search', BookController.search);
+//Mock data routes
+
+router.get('/mock-data', MockDataController);
 
 // Dev routes
 if (process.env.NODE_ENV === 'development') {
