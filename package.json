@@ -20,7 +20,7 @@
     "postinstall": "chmod +x ./scripts/dev.sh",
     "build": "tsc",
     "dev": "./scripts/dev.sh",
-    "start": "node dist/server.js",
+    "start": "node dist/src/server.js",
     "test": "jest"
   },
   "dependencies": {
