@@ -7,7 +7,7 @@ export class Timesheet {
     id: number;
 
     @Column()
-    email: string;
+    user_id: number;
 
     @Column()
     project_id: number;

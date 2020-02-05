@@ -1,51 +1,41 @@
 import { RequestHandler } from 'express';
 import handleErrorMiddleware from '../../middleware/handle-error-middleware';
-import { getRepository } from "typeorm";
-import { Timesheet } from '../../entity/Timesheet';
+import * as TimesheetRepository from '../../repository/TimesheetRepository'
 
 let add: RequestHandler = async (req, res) => {
 
-  let repository = getRepository(Timesheet);
-  
-  let timesheet : Timesheet = new Timesheet();
+  TimesheetRepository.createTimesheet(
+    req.body.user_id,
+    req.body.project_id,
+    req.body.date,
+    req.body.hour).then( timesheet =>{
+      res.send( timesheet );
+    });
 
-  timesheet.email = req.body.email;
-  timesheet.date = new Date(req.body.date);
-  timesheet.hours = req.body.hours;
-  timesheet.project_id = req.body.project_id;
-
-  await repository.save(timesheet);
-
-  res.send( timesheet );
 };
 
 let get: RequestHandler = async (req, res) => {
 
   let id = req.query.id;
 
-  let repository = getRepository(Timesheet);
-
-  const timesheet = await repository.find({
-    where: {
-      id: id
-    }
+  TimesheetRepository.getById(req.body.id).then( timesheet => {
+    res.send( timesheet );
+  })
+  .catch( reason => {
+    res.status(404).send({errror: "No timesheet"});
   });
-
-  res.send( timesheet );
 };
 
 let update: RequestHandler = async (req, res) => {
 
   let id = req.query.id;
 
-  let repository = getRepository(Timesheet);
-
-  const timesheet = await repository.findOne(id);
-  timesheet.hours = req.body.hours;
-  
-  await repository.save(timesheet);
-
-  res.send( timesheet );
+  TimesheetRepository.updateById(req.body.id, req.body.hours).then( timesheet => {
+    res.send( timesheet );
+  })
+  .catch(() => {
+    res.status(404).send({errror: "No timesheet"});
+  })
 };
 
 
@@ -53,12 +43,15 @@ let remove: RequestHandler = async (req, res) => {
 
   let id = req.query.id;
 
-  let repository = getRepository(Timesheet);
-
-  await repository.delete(id);
-
-  res.send({
-    success: true
+  TimesheetRepository.deleteById(req.body.id).then(() => {
+    res.send({
+      "message": "successfully deleted"
+    });
+  })
+  .catch(() => {
+    res.send({
+      "error": "error occured"
+    });
   });
 };
 

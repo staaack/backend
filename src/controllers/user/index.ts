@@ -1,34 +1,24 @@
 import { RequestHandler } from 'express';
 import handleErrorMiddleware from '../../middleware/handle-error-middleware';
-import { getRepository } from "typeorm";
-import { User } from '../../entity/User';
-import { Session } from '../../entity/Session';
+
+import * as UserRepository from '../../repository/UserRepository'
+import * as SessionRepository from '../../repository/SessionRepository'
 import * as bcrypt from 'bcrypt';
-import * as uuid from 'uuid';
 
 let signup: RequestHandler = async (req, res) => {
 
-  let users = getRepository(User);
+  let user = await UserRepository.getUserByEmail(req.body.email);
 
-  let user = await users.find({
-    where: {
-      email: req.body.email
-    }
-  });
 
   if(user.length == 0)
   {
-    bcrypt.hash(req.body.password, 8, (err, hash) => {
-      let user : User = new User();
-
-      user.email = req.body.email;
-      user.name = req.body.name;
-      user.title = req.body.title;
-      user.password = hash;
-
-      users.save(user);
+    UserRepository.createUser(
+      req.body.email,
+      req.body.name,
+      req.body.title,
+      req.body.password
+    ).then( user => {
       res.send(user);
-
     });
   }
   else
@@ -40,14 +30,7 @@ let signup: RequestHandler = async (req, res) => {
 
 let login: RequestHandler = async (req, res) => {
 
-  let users = getRepository(User);
-
-  let user = await users.find({
-    where: {
-      email: req.body.email
-    }
-  });
-
+  let user = await UserRepository.getUserByEmail(req.body.email);
 
   if(user.length == 0)
   {
@@ -57,20 +40,11 @@ let login: RequestHandler = async (req, res) => {
   {
     bcrypt.compare(req.body.password, user[0].password, (err, result) => {
       if(result == true)
-      {        
-        let sessions = getRepository(Session);
-        sessions.delete({user_id: user[0].id});
-
-        let session = new Session();
-
-        session.user_id = user[0].id;
-        session.token = uuid.v1();
-
-        console.log(session);
-
-        sessions.save(session);
-
-        res.send({"message": "success"});
+      {
+        SessionRepository.deleteWithUserId(user[0].id);
+        SessionRepository.createSession(user[0].id).then( token => {
+          res.send({token: token})
+        });
       }
       else
       {
