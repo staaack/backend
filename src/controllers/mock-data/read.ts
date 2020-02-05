@@ -1,5 +1,6 @@
 import { google } from 'googleapis';
 import * as readline from 'readline';
+import * as fs from 'fs';
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
@@ -41,12 +42,22 @@ function getNewToken(oAuth2Client: any, callback: any) {
  */
 function readData(auth: any, callback: any) {
   const sheets = google.sheets({version: 'v4', auth});
-  sheets.spreadsheets.values.get({
+  sheets.spreadsheets.values.batchGet({
     spreadsheetId: '1C_GqEIdO_F8M-WuxsYoFLK7-I8XNL6hmtr8V33wmGLU',
-    range: 'Engineering!A6:K',
+    ranges: [
+      'Engineering!A6:K', 
+      'Company information!A10:B14',
+      'Company information!D10:F14',
+      'Company information!A19:B23',
+      'User information!A10:E14',
+      'Timesheet information!B10:H21',
+      'Project information!B2:D5',
+      'Sales information!B10:G17',
+      'Sales information!K9:M13'
+    ],
   }, (err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
-    const rows = res.data.values;
+    const rows = res.data.valueRanges;
     callback(rows);
   });
 }

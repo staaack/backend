@@ -5,13 +5,13 @@ import { readFile } from 'fs';
 
 var mock_data: any;
 
-// readFile('src/res/credentials.json', (err, content) => {
-//   if (err) return console.log('Error loading client secret file:', err);
+readFile('src/res/credentials.json', (err, content) => {
+  if (err) return console.log('Error loading client secret file:', err);
 
-//   read.default(JSON.parse(content.toString('utf8')), (res: any) => {
-//     mock_data = res;
-//   });
-// });
+  read.default(JSON.parse(content.toString('utf8')), (res: any) => {
+    mock_data = res;
+  });
+});
 
 
 let get: RequestHandler = async (req, res) => {

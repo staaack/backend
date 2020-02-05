@@ -20,7 +20,7 @@
       "postinstall": "chmod +x ./scripts/dev.sh",
       "build": "tsc",
       "dev": "./scripts/dev.sh",
-      "start": "ts-node src/index.ts",
+      "start": "ts-node src/server.ts",
       "test": "jest"
    },
    "dependencies": {
