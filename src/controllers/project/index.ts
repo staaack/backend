@@ -1,19 +1,16 @@
 import { RequestHandler } from 'express';
 import handleErrorMiddleware from '../../middleware/handle-error-middleware';
 import { getRepository } from "typeorm";
-import { Project } from '../../entity/Project';
+import * as ProjectRepository from '../../repository/ProjectRepository';
 
 let add: RequestHandler = async (req, res) => {
 
-  let repository = getRepository(Project);
-  
-  let project : Project = new Project();
-
-  project.title = req.body.title;
-
-  await repository.save(project);
-
-  res.send( project );
+	ProjectRepository.createProject(req.body.title).then((project) => {
+  	res.send( project );
+	})
+	.catch(() => {
+  	res.status(500).send({error : "cannot add project"});
+	});
 };
 
 add = handleErrorMiddleware(add);
