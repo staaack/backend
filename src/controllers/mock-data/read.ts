@@ -45,7 +45,7 @@ function readData(auth: any, callback: any) {
   sheets.spreadsheets.values.batchGet({
     spreadsheetId: '1C_GqEIdO_F8M-WuxsYoFLK7-I8XNL6hmtr8V33wmGLU',
     ranges: [
-      'Engineering!A6:K', 
+      'Engineering!A6:R', 
       'Company information!A10:B14',
       'Company information!D10:F14',
       'Company information!A19:B23',
