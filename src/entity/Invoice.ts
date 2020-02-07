@@ -1,30 +1,26 @@
 import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
 
 @Entity()
-export class User {
+export class Invoice {
 
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    name: string;
-
-    @Column()
-    email: string;
-
-    @Column()
-    title: string;
-
-    @Column()
-    password: string;
+    client_id: number;
 
     @Column()
     company_id: number;
 
     @Column()
-    department_id: number;
+    category: string;
 
     @Column()
-    role_id: number;
+    amount: number;
 
+    @Column()
+    date: Date;
+
+    @Column()
+    paid: boolean;
 }
