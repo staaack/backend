@@ -9,7 +9,7 @@ let add: RequestHandler = async (req, res) => {
   	res.send( project );
 	})
 	.catch(() => {
-  	res.status(500).send({error : "cannot add project"});
+  		res.status(500).send({error : "cannot add project"});
 	});
 };
 

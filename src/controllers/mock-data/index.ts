@@ -5,19 +5,37 @@ import { readFile } from 'fs';
 
 var mock_data: any;
 
-readFile('src/res/credentials.json', (err, content) => {
-  if (err) return console.log('Error loading client secret file:', err);
+const readData = () => {
+	console.log("------ reading -------");
 
-  reader.default.read((res: any) => {
-    mock_data = res
-  });
-});
+	readFile('src/res/credentials.json', (err, content) => {
+	  if (err) return console.log('Error loading client secret file:', err);
 
+	  reader.default.read((res: any) => {
+	    mock_data = res
+	  });
+	});
+}
+
+setInterval(() => {
+	readData();
+}, 1000 * 60 * 10);
+
+readData();
 
 let get: RequestHandler = async (req, res) => {
   res.send(mock_data);
 };
 
-get = handleErrorMiddleware(get);
+let load: RequestHandler = async (req, res) => {
+	readData();
+	res.send({message: "updaing mock data"});
+};
 
-export default get;
+get = handleErrorMiddleware(get);
+load = handleErrorMiddleware(load);
+
+export default {
+	get,
+	load
+};

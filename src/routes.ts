@@ -15,7 +15,8 @@ const router = Router();
 
 //Mock data routes
 
-router.get('/mock-data', MockDataController);
+router.get('/mock-data', MockDataController.get);
+router.get('/mock-data/read', MockDataController.load);
 
 //Timesheet routes
 
